@@ -49,7 +49,7 @@ public class DriveOpMode extends OpMode {
 
 
 //        cameraServo.init(hardwareMap);
-
+//
     }
 
     public void start() {
@@ -59,9 +59,9 @@ public class DriveOpMode extends OpMode {
 
     @Override
     public void loop() {
-        throttle = -gamepad1.left_stick_y;
-        spin = gamepad1.left_stick_x;
-        getstuff = gamepad1.right_stick_y;
+        throttle = gamepad1.left_stick_y;
+        spin = -gamepad1.right_stick_x;
+        getstuff = gamepad2.right_stick_y;
 
         drive.drive(throttle, spin);
         drive.intake(getstuff);
@@ -83,22 +83,22 @@ public class DriveOpMode extends OpMode {
 //            telemetry.addData("Camera", "no data");
 //        }
 //
-//        if (gamepad1.aWasPressed()) {
-//            if(servo_pos < 0.41) {
-//                servo_pos = 0.40;
-//            } else {
-//                servo_pos -= 0.02;
-//            }
-//
-//        }
-//
-//        if (gamepad1.xWasPressed()) {
-//            if(servo_pos > 0.70) {
-//                servo_pos = 0.70;
-//            } else {
-//                servo_pos += 0.02;
-//            }
-//        }
+        if (gamepad2.left_trigger_pressed) {
+            if(servo_pos < 0.41) {
+                servo_pos = 0.40;
+            } else {
+                servo_pos -= 0.02;
+            }
+
+        }
+
+        if (gamepad1.xWasPressed()) {
+            if(servo_pos > 0.70) {
+                servo_pos = 0.70;
+            } else {
+                servo_pos += 0.02;
+            }
+        }
 //        cameraServo.setServo(servo_pos);
 
     }

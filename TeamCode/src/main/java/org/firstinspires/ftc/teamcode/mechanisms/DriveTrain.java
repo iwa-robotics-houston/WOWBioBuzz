@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.mechanisms;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
+import com.qualcomm.robotcore.hardware.Servo;
 
 
 public class DriveTrain {
@@ -21,6 +21,8 @@ public class DriveTrain {
         leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);
         intakeMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         intakeMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+//        servo = hwMap.get(Servo.class, "_servo");
     }
 
     public void drive(double throttle, double spin) {
@@ -39,8 +41,15 @@ public class DriveTrain {
         rightMotor.setPower(rightPower);
     }
 
+
     public void intake(double getstuff) {
         intakeMotor.setPower(getstuff);
 
+    }
+
+    public void tankdrive(double leftPower, double rightPower) {
+
+        leftMotor.setPower(leftPower);
+        rightMotor.setPower(rightPower);
     }
 }
