@@ -16,8 +16,8 @@ public class LauncherUtils {
 
 
     public void init(HardwareMap hwMap) {
-        motorOne = hwMap.get(DcMotorEx.class, "motorOne");
-        motorTwo = hwMap.get(DcMotorEx.class, "motorTwo");
+        motorOne = hwMap.get(DcMotorEx.class, "topMotor");
+        motorTwo = hwMap.get(DcMotorEx.class, "bottomMotor");
 
         motorOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
         motorTwo.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
@@ -27,7 +27,7 @@ public class LauncherUtils {
 
     public void shooter(int velocity, double adj_ratio, PIDFCoefficients pidCoefficients) {
 
-        int adjustedvelocity = (int) (-1*velocity/adj_ratio);
+        int adjustedvelocity = (int) (-1*velocity*adj_ratio);
         motorOne.setVelocity(adjustedvelocity);
         motorTwo.setVelocity(velocity);
 

@@ -7,8 +7,11 @@ import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.VoltageSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
+import org.firstinspires.ftc.teamcode.LauncherTest.LauncherUtils;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 import org.firstinspires.ftc.teamcode.mechanisms.ServoAprilTag;
 
@@ -26,7 +29,7 @@ import org.firstinspires.ftc.teamcode.mechanisms.ServoAprilTag;
 public class DriveOpMode extends OpMode {
 
 //    private Limelight3A limelight;
-    //ServoAprilTag cameraServo = new ServoAprilTag();
+    ServoAprilTag pulleyServo = new ServoAprilTag();
 
     DriveTrain drive = new DriveTrain();
 
@@ -34,6 +37,16 @@ public class DriveOpMode extends OpMode {
     double tx, ty, ta;
 
     double servo_pos = 0.50;
+
+    double f = 13.9;
+    double p = 167.0;
+
+    //private VoltageSensor myControlHubVoltageSensor;
+
+    int newvelocity = 0;
+    double adj_motor_ratio = 0.75;
+
+    LauncherUtils launcher = new LauncherUtils();
 
     double distanceToGoalInches;
 
@@ -43,12 +56,15 @@ public class DriveOpMode extends OpMode {
 
         drive.init(hardwareMap);
 
+
+        launcher.init(hardwareMap);
+
 //        limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
 //        limelight.pipelineSwitch(7);
 
 
-//        cameraServo.init(hardwareMap);
+        pulleyServo.init(hardwareMap);
 //
     }
 
@@ -70,6 +86,41 @@ public class DriveOpMode extends OpMode {
         telemetry.addData("throttle: ", throttle);
         telemetry.addData("spin: ", spin);
 
+//        // adjust velocity based on button pushed
+//        if (gamepad2.yWasPressed()) {
+//            newvelocity = 1400;
+//        } else if (gamepad2.bWasPressed()) {
+//            newvelocity = 0;
+//        } else if (gamepad2.xWasPressed()) {
+//            newvelocity = (newvelocity + 28);
+//        } else if (gamepad2.aWasPressed()) {
+//            newvelocity = (newvelocity - 28);
+//        }
+//
+//        // adjust ratio of small wheel velocity to big wheel velocity
+//        if (gamepad2.leftTriggerWasPressed()) {
+//            adj_motor_ratio += 0.05;
+//
+//        } else if (gamepad2.leftBumperWasPressed()) {
+//            adj_motor_ratio -= 0.05;
+//        }
+//
+//        if (gamepad2.dpadUpWasPressed()) {
+//            f += 1;
+//        } else if (gamepad2.dpadRightWasPressed()) {
+//            f += 0.1;
+//        } else if (gamepad2.dpadDownWasPressed()) {
+//            f -= 1;
+//        } else if (gamepad2.dpadLeftWasPressed()) {
+//            f -= 0.1;
+//        }
+//
+//
+//        PIDFCoefficients newCoefficients = new PIDFCoefficients(p, 0, 0, f);
+
+
+//        launcher.shooter(newvelocity, adj_motor_ratio, newCoefficients);
+
 
 //        LLResult result = limelight.getLatestResult();
 //        if (result != null && result.isValid()) {
@@ -82,23 +133,15 @@ public class DriveOpMode extends OpMode {
 //        else {
 //            telemetry.addData("Camera", "no data");
 //        }
-//
-        if (gamepad2.left_trigger_pressed) {
-            if(servo_pos < 0.41) {
-                servo_pos = 0.40;
-            } else {
-                servo_pos -= 0.02;
-            }
-
+////
+        if (gamepad2.left_stick_y > 0) {
+            pulleyServo.servoSpinForward();
+        } else if (gamepad2.left_stick_y < 0)  {
+            pulleyServo.servoSpinBackward();
+        } else {
+            pulleyServo.servoStop();
         }
 
-        if (gamepad1.xWasPressed()) {
-            if(servo_pos > 0.70) {
-                servo_pos = 0.70;
-            } else {
-                servo_pos += 0.02;
-            }
-        }
 //        cameraServo.setServo(servo_pos);
 
     }
