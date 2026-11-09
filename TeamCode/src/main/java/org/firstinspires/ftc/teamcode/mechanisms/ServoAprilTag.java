@@ -13,6 +13,7 @@ public class ServoAprilTag {
     public void init(HardwareMap hwMap) {
         //servo = hwMap.get(Servo.class, "pulleyServo");
         servo = hwMap.get(CRServo.class, "pulleyServo");
+        servo.setPower(0);
     }
 
 //    public void setServo(double angle) {
@@ -31,7 +32,7 @@ public class ServoAprilTag {
 
     public void servoStop() {
         servo.setDirection(DcMotorSimple.Direction.FORWARD);
-        servo.setPower(0.5);
+        servo.setPower(0.0);
     }
 
 }

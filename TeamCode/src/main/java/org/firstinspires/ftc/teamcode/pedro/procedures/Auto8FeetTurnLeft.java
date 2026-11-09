@@ -11,7 +11,7 @@ public class Auto8FeetTurnLeft extends LinearOpMode {
     private DcMotor leftMotor, rightMotor;
 
     // ---- FILL THESE IN ----
-    static final double TICKS_PER_REV = 28;     // 5203 312 RPM motor. Check your motor's spec
+    static final double TICKS_PER_REV = 28 * 13.7;     // 5203 312 RPM motor. Check your motor's spec
     static final double WHEEL_DIAMETER_IN = 3.5;   // measure your wheel
     // -----------------------
 

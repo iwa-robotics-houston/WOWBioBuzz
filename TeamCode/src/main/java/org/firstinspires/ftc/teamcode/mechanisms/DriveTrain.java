@@ -43,7 +43,7 @@ public class DriveTrain {
 
 
     public void intake(double getstuff) {
-        intakeMotor.setPower(getstuff);
+        intakeMotor.setPower(getstuff*.5);
 
     }
 

@@ -46,7 +46,7 @@ public class DriveOpMode extends OpMode {
     int newvelocity = 0;
     double adj_motor_ratio = 0.75;
 
-    LauncherUtils launcher = new LauncherUtils();
+//    LauncherUtils launcher = new LauncherUtils();
 
     double distanceToGoalInches;
 
@@ -57,7 +57,7 @@ public class DriveOpMode extends OpMode {
         drive.init(hardwareMap);
 
 
-        launcher.init(hardwareMap);
+//        launcher.init(hardwareMap);
 
 //        limelight = hardwareMap.get(Limelight3A.class, "limelight");
 //        telemetry.setMsTransmissionInterval(11);
@@ -65,6 +65,7 @@ public class DriveOpMode extends OpMode {
 
 
         pulleyServo.init(hardwareMap);
+        pulleyServo.servoStop();
 //
     }
 
@@ -86,61 +87,13 @@ public class DriveOpMode extends OpMode {
         telemetry.addData("throttle: ", throttle);
         telemetry.addData("spin: ", spin);
 
-//        // adjust velocity based on button pushed
-//        if (gamepad2.yWasPressed()) {
-//            newvelocity = 1400;
-//        } else if (gamepad2.bWasPressed()) {
-//            newvelocity = 0;
-//        } else if (gamepad2.xWasPressed()) {
-//            newvelocity = (newvelocity + 28);
-//        } else if (gamepad2.aWasPressed()) {
-//            newvelocity = (newvelocity - 28);
+//        if (gamepad2.left_stick_y > 0.5) {
+//            pulleyServo.servoSpinForward();
+//        } else if (gamepad2.left_stick_y < 0.0)  {
+//            pulleyServo.servoSpinBackward();
+//        } else {
+//            pulleyServo.servoStop();
 //        }
-//
-//        // adjust ratio of small wheel velocity to big wheel velocity
-//        if (gamepad2.leftTriggerWasPressed()) {
-//            adj_motor_ratio += 0.05;
-//
-//        } else if (gamepad2.leftBumperWasPressed()) {
-//            adj_motor_ratio -= 0.05;
-//        }
-//
-//        if (gamepad2.dpadUpWasPressed()) {
-//            f += 1;
-//        } else if (gamepad2.dpadRightWasPressed()) {
-//            f += 0.1;
-//        } else if (gamepad2.dpadDownWasPressed()) {
-//            f -= 1;
-//        } else if (gamepad2.dpadLeftWasPressed()) {
-//            f -= 0.1;
-//        }
-//
-//
-//        PIDFCoefficients newCoefficients = new PIDFCoefficients(p, 0, 0, f);
-
-
-//        launcher.shooter(newvelocity, adj_motor_ratio, newCoefficients);
-
-
-//        LLResult result = limelight.getLatestResult();
-//        if (result != null && result.isValid()) {
-//
-//                Pose3D botpose = result.getBotpose();
-//                telemetry.addData("tx", result.getTx());
-//                telemetry.addData("ty", result.getTy());
-//                telemetry.addData("Botpose", botpose.toString());
-//            }
-//        else {
-//            telemetry.addData("Camera", "no data");
-//        }
-////
-        if (gamepad2.left_stick_y > 0) {
-            pulleyServo.servoSpinForward();
-        } else if (gamepad2.left_stick_y < 0)  {
-            pulleyServo.servoSpinBackward();
-        } else {
-            pulleyServo.servoStop();
-        }
 
 //        cameraServo.setServo(servo_pos);
 
