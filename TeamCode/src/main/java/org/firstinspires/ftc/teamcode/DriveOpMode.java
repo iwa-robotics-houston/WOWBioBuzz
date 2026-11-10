@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode;
 
-//import com.qualcomm.hardware.limelightvision.LLResultTypes;
-//import com.qualcomm.hardware.limelightvision.LLStatus;
+import com.qualcomm.hardware.limelightvision.LLResultTypes;
+import com.qualcomm.hardware.limelightvision.LLStatus;
 
+import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
@@ -33,6 +36,12 @@ public class DriveOpMode extends OpMode {
 
     DriveTrain drive = new DriveTrain();
 
+    Limelight3A limelight;
+
+    GoBildaPinpointDriver imu;
+
+    DcMotorEx turret;
+
     double throttle, spin, getstuff;
     double tx, ty, ta;
 
@@ -41,12 +50,14 @@ public class DriveOpMode extends OpMode {
     double f = 13.9;
     double p = 167.0;
 
+
+
     //private VoltageSensor myControlHubVoltageSensor;
 
-    int newvelocity = 0;
+    int newVelocity = 0;
     double adj_motor_ratio = 0.75;
 
-//    LauncherUtils launcher = new LauncherUtils();
+    LauncherUtils launcher = new LauncherUtils();
 
     double distanceToGoalInches;
 
@@ -57,20 +68,28 @@ public class DriveOpMode extends OpMode {
         drive.init(hardwareMap);
 
 
-//        launcher.init(hardwareMap);
+        launcher.init(hardwareMap);
 
-//        limelight = hardwareMap.get(Limelight3A.class, "limelight");
-//        telemetry.setMsTransmissionInterval(11);
-//        limelight.pipelineSwitch(7);
-
+        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        telemetry.setMsTransmissionInterval(11);
+        limelight.pipelineSwitch(7);
+        //hi what is this pipeline for --Carys
 
         pulleyServo.init(hardwareMap);
         pulleyServo.servoStop();
+
+        turret = hardwareMap.get(DcMotorEx.class, "Turret");
+        turret.setPositionPIDFCoefficients(0);
+
+        imu = hardwareMap.get(GoBildaPinpointDriver.class, "imu");
+
 //
     }
 
     public void start() {
-//        limelight.start();
+        limelight.start();
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
+        //limelight.startTracking();
     }
 
 
@@ -82,21 +101,33 @@ public class DriveOpMode extends OpMode {
 
         drive.drive(throttle, spin);
         drive.intake(getstuff);
-
+        imu.update();
 
         telemetry.addData("throttle: ", throttle);
         telemetry.addData("spin: ", spin);
+        telemetry.addData("Turret Angle", turret.getTargetPosition());
 
-//        if (gamepad2.left_stick_y > 0.5) {
-//            pulleyServo.servoSpinForward();
-//        } else if (gamepad2.left_stick_y < 0.0)  {
-//            pulleyServo.servoSpinBackward();
-//        } else {
-//            pulleyServo.servoStop();
-//        }
+        if (gamepad2.left_stick_y > 0.5) {
+            pulleyServo.servoSpinForward();
+        } else if (gamepad2.left_stick_y < 0.0)  {
+            pulleyServo.servoSpinBackward();
+        } else {
+            pulleyServo.servoStop();
+        }
+        //cameraServo.setServo(servo_pos);
 
-//        cameraServo.setServo(servo_pos);
-
+        /*
+        limelight.uploadPipeline();
+        limelight.scanGoal();
+        if (limelight.resultWorks() && limelight.getTa() > 1.7) {
+            ss
+        } else if (limelight.resultWorks() && limelight.getTa() < 1.7) {
+            frontLeftDrive.setPower(0);
+            frontRightDrive.setPower(0);
+            backLeftDrive.setPower(0);
+            backRightDrive.setPower(0);
+            telemetry.addLine("close blue goal");
+        */
     }
 }
 
