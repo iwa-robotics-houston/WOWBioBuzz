@@ -117,16 +117,13 @@ public class DriveOpMode extends OpMode {
         //cameraServo.setServo(servo_pos);
 
         /*
+        //this is straight up last season's code, was hoping to use skeleton
         limelight.uploadPipeline();
         limelight.scanGoal();
         if (limelight.resultWorks() && limelight.getTa() > 1.7) {
-            ss
+
         } else if (limelight.resultWorks() && limelight.getTa() < 1.7) {
-            frontLeftDrive.setPower(0);
-            frontRightDrive.setPower(0);
-            backLeftDrive.setPower(0);
-            backRightDrive.setPower(0);
-            telemetry.addLine("close blue goal");
+
         */
     }
 }
