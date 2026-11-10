@@ -31,12 +31,10 @@ import org.firstinspires.ftc.teamcode.mechanisms.ServoAprilTag;
 @TeleOp
 public class DriveOpMode extends OpMode {
 
-//    private Limelight3A limelight;
+    private Limelight3A limelight;
     ServoAprilTag pulleyServo = new ServoAprilTag();
 
     DriveTrain drive = new DriveTrain();
-
-    Limelight3A limelight;
 
     GoBildaPinpointDriver imu;
 
@@ -50,9 +48,7 @@ public class DriveOpMode extends OpMode {
     double f = 13.9;
     double p = 167.0;
 
-
-
-    //private VoltageSensor myControlHubVoltageSensor;
+    private VoltageSensor myControlHubVoltageSensor;
 
     int newVelocity = 0;
     double adj_motor_ratio = 0.75;
