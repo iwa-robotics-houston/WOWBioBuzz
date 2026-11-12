@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 public class LauncherUtils {
 
-    private DcMotorEx motorOne, motorTwo;
+    private DcMotorEx topMotor, botMotor;
     double velocity;
     double adj_ratio;
 
@@ -16,11 +16,11 @@ public class LauncherUtils {
 
 
     public void init(HardwareMap hwMap) {
-        motorOne = hwMap.get(DcMotorEx.class, "topMotor");
-        motorTwo = hwMap.get(DcMotorEx.class, "bottomMotor");
+        topMotor = hwMap.get(DcMotorEx.class, "topMotor");
+        botMotor = hwMap.get(DcMotorEx.class, "bottomMotor");
 
-        motorOne.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
-        motorTwo.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        topMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+        botMotor.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
 
     }
@@ -28,13 +28,13 @@ public class LauncherUtils {
     public void shooter(int velocity, double adj_ratio, PIDFCoefficients pidCoefficients) {
 
         int adjustedvelocity = (int) (-1*velocity*adj_ratio);
-        motorOne.setVelocity(adjustedvelocity);
-        motorTwo.setVelocity(velocity);
+        topMotor.setVelocity(adjustedvelocity);
+        botMotor.setVelocity(velocity);
 
-        motorOne.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
-        motorTwo.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
-        actualVelocity1 = motorTwo.getVelocity();
-        actualvelocity2 = motorOne.getVelocity();
+        topMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
+        botMotor.setPIDFCoefficients(DcMotor.RunMode.RUN_USING_ENCODER, pidCoefficients);
+        actualVelocity1 = topMotor.getVelocity();
+        actualvelocity2 = botMotor.getVelocity();
 
     }
 }

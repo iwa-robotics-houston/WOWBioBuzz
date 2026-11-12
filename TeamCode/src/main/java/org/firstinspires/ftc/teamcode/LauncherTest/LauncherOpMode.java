@@ -17,7 +17,7 @@ public class LauncherOpMode extends OpMode {
 
     private VoltageSensor myControlHubVoltageSensor;
 
-    int newvelocity = 0;
+    int newVelocity = 0;
     double adj_motor_ratio = 1.75;
 
     LauncherUtils launcher = new LauncherUtils();
@@ -30,7 +30,6 @@ public class LauncherOpMode extends OpMode {
 
         // initialize voltage sensor
         myControlHubVoltageSensor = hardwareMap.get(VoltageSensor.class, "Control Hub");
-
     }
 
     @Override
@@ -38,13 +37,13 @@ public class LauncherOpMode extends OpMode {
 
         // adjust velocity based on button pushed
         if (gamepad1.yWasPressed()) {
-            newvelocity = 1400;
+            newVelocity = 1400;
         } else if (gamepad1.bWasPressed()) {
-            newvelocity = 0;
+            newVelocity = 0;
         } else if (gamepad1.xWasPressed()) {
-            newvelocity = (newvelocity + 28);
+            newVelocity = (newVelocity + 28);
         } else if (gamepad1.aWasPressed()) {
-            newvelocity = (newvelocity - 28);
+            newVelocity = (newVelocity - 28);
         }
 
         // adjust ratio of small wheel velocity to big wheel velocity
@@ -69,12 +68,12 @@ public class LauncherOpMode extends OpMode {
         PIDFCoefficients newCoefficients = new PIDFCoefficients(p, 0, 0, f);
 
 
-        launcher.shooter(newvelocity, adj_motor_ratio, newCoefficients);
+        launcher.shooter(newVelocity, adj_motor_ratio, newCoefficients);
 
 
-        telemetry.addData("Main target velocity: ", newvelocity);
+        telemetry.addData("Main target velocity: ", newVelocity);
         telemetry.addData("Main actual velocity: ", launcher.actualVelocity1);
-        telemetry.addData("Adjusted target velocity: ", -1*newvelocity/adj_motor_ratio);
+        telemetry.addData("Adjusted target velocity: ", -1* newVelocity /adj_motor_ratio);
         telemetry.addData("Actual adjusted velocity: ", launcher.actualvelocity2);
         telemetry.addData("Wheel ratio: ", adj_motor_ratio);
         telemetry.addData("Voltage: ", myControlHubVoltageSensor.getVoltage());

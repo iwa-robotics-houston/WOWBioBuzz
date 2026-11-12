@@ -40,7 +40,7 @@ public class DriveOpMode extends OpMode {
 
     DcMotorEx turret;
 
-    double throttle, spin, getstuff;
+    double lateral, axial, getstuff;
     double tx, ty, ta;
 
     double servo_pos = 0.50;
@@ -66,16 +66,16 @@ public class DriveOpMode extends OpMode {
 
         launcher.init(hardwareMap);
 
-        limelight = hardwareMap.get(Limelight3A.class, "limelight");
+        //limelight = hardwareMap.get(Limelight3A.class, "limelight");
         telemetry.setMsTransmissionInterval(11);
-        limelight.pipelineSwitch(7);
+        //limelight.pipelineSwitch(7);
         //hi what is this pipeline for --Carys
 
         pulleyServo.init(hardwareMap);
         pulleyServo.servoStop();
 
-        turret = hardwareMap.get(DcMotorEx.class, "Turret");
-        turret.setPositionPIDFCoefficients(0);
+        //turret = hardwareMap.get(DcMotorEx.class, "turret");
+        //turret.setPositionPIDFCoefficients(0);
 
         imu = hardwareMap.get(GoBildaPinpointDriver.class, "imu");
 
@@ -83,25 +83,26 @@ public class DriveOpMode extends OpMode {
     }
 
     public void start() {
-        limelight.start();
-        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
+        //limelight.start();
+        //turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
         //limelight.startTracking();
     }
 
 
     @Override
     public void loop() {
-        throttle = gamepad1.left_stick_y;
-        spin = -gamepad1.right_stick_x;
-        getstuff = gamepad2.right_stick_y;
+        axial = gamepad1.left_stick_y;
+        lateral = -gamepad1.right_stick_x;
+        //getstuff = gamepad2.right_stick_y;
+        //this WAS strafe, and we don't have that, so maybe intake??
 
-        drive.drive(throttle, spin);
+        drive.drive(axial, lateral);
         drive.intake(getstuff);
         imu.update();
 
-        telemetry.addData("throttle: ", throttle);
-        telemetry.addData("spin: ", spin);
-        telemetry.addData("Turret Angle", turret.getTargetPosition());
+        telemetry.addData("axial: ", axial);
+        telemetry.addData("lateral: ", lateral);
+        //telemetry.addData("Turret Angle", turret.getTargetPosition());
 
         if (gamepad2.left_stick_y > 0.5) {
             pulleyServo.servoSpinForward();
