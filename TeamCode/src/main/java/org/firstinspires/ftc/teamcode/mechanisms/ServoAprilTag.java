@@ -3,17 +3,15 @@ package org.firstinspires.ftc.teamcode.mechanisms;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.ServoController;
 
 public class ServoAprilTag {
 
-    private CRServo servo;
+    private CRServo pulley;
 
     public void init(HardwareMap hwMap) {
         //servo = hwMap.get(Servo.class, "pulleyServo");
-        servo = hwMap.get(CRServo.class, "pulleyServo");
-        servo.setPower(0);
+        pulley = hwMap.get(CRServo.class, "pulleyServo");
+        pulley.setPower(0);
     }
 
 //    public void setServo(double angle) {
@@ -21,18 +19,18 @@ public class ServoAprilTag {
 //    }
 
     public void servoSpinForward() {
-        servo.setDirection(DcMotorSimple.Direction.FORWARD);
-        servo.setPower(0.5);
+        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
+        pulley.setPower(0.5);
     }
 
     public void servoSpinBackward() {
-        servo.setDirection(DcMotorSimple.Direction.FORWARD);
-        servo.setPower(0.5);
+        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
+        pulley.setPower(0.5);
     }
 
     public void servoStop() {
-        servo.setDirection(DcMotorSimple.Direction.FORWARD);
-        servo.setPower(0.0);
+        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
+        pulley.setPower(0.0);
     }
 
 }

@@ -1,19 +1,14 @@
 package org.firstinspires.ftc.teamcode;
 
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
-import com.qualcomm.hardware.limelightvision.LLStatus;
-
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
-import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.VoltageSensor;
 
-import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.LauncherTest.LauncherUtils;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 import org.firstinspires.ftc.teamcode.mechanisms.ServoAprilTag;
@@ -32,7 +27,8 @@ import org.firstinspires.ftc.teamcode.mechanisms.ServoAprilTag;
 public class DriveOpMode extends OpMode {
 
     private Limelight3A limelight;
-    ServoAprilTag pulleyServo = new ServoAprilTag();
+    ServoAprilTag pulley = new ServoAprilTag();
+    //this is just the pulley, can fix later
 
     DriveTrain drive = new DriveTrain();
 
@@ -40,7 +36,10 @@ public class DriveOpMode extends OpMode {
 
     DcMotorEx turret;
 
-    double lateral, axial, getstuff;
+    CRServo passThrough;
+    CRServo passUp;
+
+    double lateral, axial, intake;
     double tx, ty, ta;
 
     double servo_pos = 0.50;
@@ -71,12 +70,13 @@ public class DriveOpMode extends OpMode {
         //limelight.pipelineSwitch(7);
         //hi what is this pipeline for --Carys
 
-        pulleyServo.init(hardwareMap);
-        pulleyServo.servoStop();
+        pulley.init(hardwareMap);
+        pulley.servoStop();
 
-        //turret = hardwareMap.get(DcMotorEx.class, "turret");
-        //turret.setPositionPIDFCoefficients(0);
-
+        turret = hardwareMap.get(DcMotorEx.class, "turret");
+        passThrough = hardwareMap.get(CRServo.class, "passthrough");
+        passUp = hardwareMap.get(CRServo.class, "passup");
+        turret.setPositionPIDFCoefficients(0);
         imu = hardwareMap.get(GoBildaPinpointDriver.class, "imu");
 
 //
@@ -84,7 +84,7 @@ public class DriveOpMode extends OpMode {
 
     public void start() {
         //limelight.start();
-        //turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
+        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
         //limelight.startTracking();
     }
 
@@ -93,11 +93,10 @@ public class DriveOpMode extends OpMode {
     public void loop() {
         axial = gamepad1.left_stick_y;
         lateral = -gamepad1.right_stick_x;
-        //getstuff = gamepad2.right_stick_y;
-        //this WAS strafe, and we don't have that, so maybe intake??
+        intake = gamepad2.right_stick_y;
 
         drive.drive(axial, lateral);
-        drive.intake(getstuff);
+        drive.intake(intake);
         imu.update();
 
         telemetry.addData("axial: ", axial);
@@ -105,13 +104,31 @@ public class DriveOpMode extends OpMode {
         //telemetry.addData("Turret Angle", turret.getTargetPosition());
 
         if (gamepad2.left_stick_y > 0.5) {
-            pulleyServo.servoSpinForward();
+            pulley.servoSpinForward();
         } else if (gamepad2.left_stick_y < 0.0)  {
-            pulleyServo.servoSpinBackward();
+            pulley.servoSpinBackward();
         } else {
-            pulleyServo.servoStop();
+            pulley.servoStop();
         }
         //cameraServo.setServo(servo_pos);
+
+        //pass-through & pass-up
+        //can be combined together or combined with launcher
+        if (gamepad2.dpad_up) {
+            passThrough.setPower(.5);
+        } else if (gamepad2.dpad_down) {
+            passThrough.setPower(-.5);
+        } else {
+            passThrough.setPower(0);
+        }
+
+        if (gamepad2.dpad_left) {
+            passUp.setPower(1);
+        } else if (gamepad2.dpad_right) {
+            passUp.setPower(-.5);
+        } else {
+            passUp.setPower(0);
+        }
 
         /*
         //this is straight up last season's code, was hoping to use skeleton
