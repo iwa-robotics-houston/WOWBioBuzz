@@ -34,12 +34,12 @@ public class DriveOpMode extends OpMode {
 
     GoBildaPinpointDriver imu;
 
-    DcMotorEx turret;
+    DcMotorEx intake;
 
     CRServo passThrough;
     CRServo passUp;
 
-    double lateral, axial, intake;
+    double lateral, axial;
     double tx, ty, ta;
 
     double servo_pos = 0.50;
@@ -52,6 +52,8 @@ public class DriveOpMode extends OpMode {
     int newVelocity = 0;
     double adj_motor_ratio = 0.75;
 
+    DcMotorEx topMotor, botMotor;
+
     LauncherUtils launcher = new LauncherUtils();
 
     double distanceToGoalInches;
@@ -61,9 +63,10 @@ public class DriveOpMode extends OpMode {
 
 
         drive.init(hardwareMap);
-
-
         launcher.init(hardwareMap);
+        topMotor = hardwareMap.get(DcMotorEx.class, "topMotor");
+        botMotor = hardwareMap.get(DcMotorEx.class, "bottomMotor");
+
 
         //limelight = hardwareMap.get(Limelight3A.class, "limelight");
         telemetry.setMsTransmissionInterval(11);
@@ -73,10 +76,11 @@ public class DriveOpMode extends OpMode {
         pulley.init(hardwareMap);
         pulley.servoStop();
 
-        turret = hardwareMap.get(DcMotorEx.class, "turret");
+        //turret = hardwareMap.get(DcMotorEx.class, "turret");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
         passThrough = hardwareMap.get(CRServo.class, "passthrough");
         passUp = hardwareMap.get(CRServo.class, "passup");
-        turret.setPositionPIDFCoefficients(0);
+        //turret.setPositionPIDFCoefficients(0);
         imu = hardwareMap.get(GoBildaPinpointDriver.class, "imu");
 
 //
@@ -84,7 +88,7 @@ public class DriveOpMode extends OpMode {
 
     public void start() {
         //limelight.start();
-        turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
+        //turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
         //limelight.startTracking();
     }
 
@@ -93,19 +97,26 @@ public class DriveOpMode extends OpMode {
     public void loop() {
         axial = gamepad1.left_stick_y;
         lateral = -gamepad1.right_stick_x;
-        intake = gamepad2.right_stick_y;
+        //intake = gamepad2.right_stick_y;
 
         drive.drive(axial, lateral);
-        drive.intake(intake);
         imu.update();
 
         telemetry.addData("axial: ", axial);
         telemetry.addData("lateral: ", lateral);
         //telemetry.addData("Turret Angle", turret.getTargetPosition());
 
+        if (gamepad2.left_trigger > 0.0) {
+            intake.setPower(-1);
+        } else if (gamepad2.right_trigger > 0.0)  {
+            intake.setPower(1);
+        } else {
+            intake.setPower(0);
+        }
+
         if (gamepad2.left_stick_y > 0.5) {
             pulley.servoSpinForward();
-        } else if (gamepad2.left_stick_y < 0.0)  {
+        } else if (gamepad2.left_stick_y < -0.5)  {
             pulley.servoSpinBackward();
         } else {
             pulley.servoStop();
@@ -122,12 +133,32 @@ public class DriveOpMode extends OpMode {
             passThrough.setPower(0);
         }
 
-        if (gamepad2.dpad_left) {
+
+        if (gamepad2.dpad_right) {
             passUp.setPower(1);
-        } else if (gamepad2.dpad_right) {
+        } else if (gamepad2.dpad_left) {
             passUp.setPower(-.5);
         } else {
             passUp.setPower(0);
+        }
+
+
+        if (gamepad2.yWasPressed()) {
+            newVelocity = 1400;
+            topMotor.setVelocity(newVelocity);
+            botMotor.setVelocity(-newVelocity);
+        } else if (gamepad2.aWasPressed()) {
+            newVelocity = 0;
+            topMotor.setVelocity(newVelocity);
+            botMotor.setVelocity(-newVelocity);
+        } else if (gamepad2.bWasPressed()) {
+            newVelocity = (newVelocity + 28);
+            topMotor.setVelocity(newVelocity);
+            botMotor.setVelocity(-newVelocity);
+        } else if (gamepad2.xWasPressed()) {
+            newVelocity = (newVelocity - 28);
+            topMotor.setVelocity(newVelocity);
+            botMotor.setVelocity(-newVelocity);
         }
 
         /*

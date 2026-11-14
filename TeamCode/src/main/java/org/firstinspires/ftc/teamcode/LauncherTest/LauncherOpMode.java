@@ -37,7 +37,7 @@ public class LauncherOpMode extends OpMode {
 
         // adjust velocity based on button pushed
         if (gamepad1.yWasPressed()) {
-            newVelocity = 1400;
+            newVelocity = -1400;
         } else if (gamepad1.bWasPressed()) {
             newVelocity = 0;
         } else if (gamepad1.xWasPressed()) {
