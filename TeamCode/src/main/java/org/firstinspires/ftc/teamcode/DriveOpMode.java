@@ -132,9 +132,9 @@ public class DriveOpMode extends OpMode {
         //can be combined together or combined with launcher
         // CHANGED: same buttons, now driving a motor
         if (gamepad2.dpad_up) {
-            passThrough.setPower(.5);
+            passThrough.setPower(1);
         } else if (gamepad2.dpad_down) {
-            passThrough.setPower(-.5);
+            passThrough.setPower(-1);
         } else {
             passThrough.setPower(0);
         }
@@ -143,7 +143,7 @@ public class DriveOpMode extends OpMode {
         if (gamepad2.dpad_right) {
             passUp.setPower(1);
         } else if (gamepad2.dpad_left) {
-            passUp.setPower(-.5);
+            passUp.setPower(-1);
         } else {
             passUp.setPower(0);
         }
