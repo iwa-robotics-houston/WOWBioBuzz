@@ -9,28 +9,20 @@ public class ServoAprilTag {
     private CRServo pulley;
 
     public void init(HardwareMap hwMap) {
-        //servo = hwMap.get(Servo.class, "pulleyServo");
         pulley = hwMap.get(CRServo.class, "pulleyServo");
+        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
         pulley.setPower(0);
     }
 
-//    public void setServo(double angle) {
-//        servo.setPosition(angle);
-//    }
-
     public void servoSpinForward() {
-        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
         pulley.setPower(0.5);
     }
 
     public void servoSpinBackward() {
-        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
-        pulley.setPower(0.5);
+        pulley.setPower(-0.5);
     }
 
     public void servoStop() {
-        pulley.setDirection(DcMotorSimple.Direction.FORWARD);
         pulley.setPower(0.0);
     }
-
 }

@@ -12,6 +12,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.LauncherTest.LauncherUtils;
 import org.firstinspires.ftc.teamcode.mechanisms.DriveTrain;
 import org.firstinspires.ftc.teamcode.mechanisms.ServoAprilTag;
+import org.firstinspires.ftc.teamcode.mechanisms.Turret;   // NEW
 
 //import org.firstinspires.ftc.robotcore.external.hardware.camera.CameraCompatibilityManager;
 //import org.opencv.imgproc.Imgproc;
@@ -32,11 +33,13 @@ public class DriveOpMode extends OpMode {
 
     DriveTrain drive = new DriveTrain();
 
+    Turret turret = new Turret();                 // NEW
+
     GoBildaPinpointDriver imu;
 
     DcMotorEx intake;
 
-    CRServo passThrough;
+    DcMotorEx passThrough;                        // CHANGED: was a CRServo, now a motor
     CRServo passUp;
 
     double lateral, axial;
@@ -76,11 +79,15 @@ public class DriveOpMode extends OpMode {
         pulley.init(hardwareMap);
         pulley.servoStop();
 
-        //turret = hardwareMap.get(DcMotorEx.class, "turret");
+        turret.init(hardwareMap);                 // NEW
         intake = hardwareMap.get(DcMotorEx.class, "intake");
-        passThrough = hardwareMap.get(CRServo.class, "passthrough");
+
+        // CHANGED: passthrough is now a motor named "passThrough" (capital T)
+        passThrough = hardwareMap.get(DcMotorEx.class, "passThrough");
+        passThrough.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        passThrough.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         passUp = hardwareMap.get(CRServo.class, "passup");
-        //turret.setPositionPIDFCoefficients(0);
         imu = hardwareMap.get(GoBildaPinpointDriver.class, "imu");
 
 //
@@ -88,7 +95,6 @@ public class DriveOpMode extends OpMode {
 
     public void start() {
         //limelight.start();
-        //turret.setMode(DcMotor.RunMode.RUN_USING_ENCODER); //just in case
         //limelight.startTracking();
     }
 
@@ -104,7 +110,6 @@ public class DriveOpMode extends OpMode {
 
         telemetry.addData("axial: ", axial);
         telemetry.addData("lateral: ", lateral);
-        //telemetry.addData("Turret Angle", turret.getTargetPosition());
 
         if (gamepad2.left_trigger > 0.0) {
             intake.setPower(-1);
@@ -125,6 +130,7 @@ public class DriveOpMode extends OpMode {
 
         //pass-through & pass-up
         //can be combined together or combined with launcher
+        // CHANGED: same buttons, now driving a motor
         if (gamepad2.dpad_up) {
             passThrough.setPower(.5);
         } else if (gamepad2.dpad_down) {
@@ -141,6 +147,15 @@ public class DriveOpMode extends OpMode {
         } else {
             passUp.setPower(0);
         }
+
+        // NEW: turret. gamepad2 right stick left/right aims, left bumper recenters
+        turret.aim(gamepad2.right_stick_x);
+        if (gamepad2.left_bumper) {
+            turret.center();
+        }
+        turret.update();
+        telemetry.addData("Turret pos: ", turret.getPosition());
+        telemetry.addData("Turret target: ", turret.getTarget());
 
 
         if (gamepad2.yWasPressed()) {
@@ -172,4 +187,3 @@ public class DriveOpMode extends OpMode {
         */
     }
 }
-
